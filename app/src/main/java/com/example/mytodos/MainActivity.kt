@@ -1,7 +1,9 @@
 package com.example.mytodos
 
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.SharedPreferences
+import android.net.ConnectivityManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -18,6 +20,7 @@ class MainActivity : AppCompatActivity(),IToDoClick,IToDoDelete {
     private lateinit var toDoRepository: ToDoRepository
     private lateinit var todoDAO: TodoDAO
     private lateinit var database: TodoDatabase
+    private lateinit var receiver: NetworkChangeReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +33,11 @@ class MainActivity : AppCompatActivity(),IToDoClick,IToDoDelete {
         toDoRepository = ToDoRepository(todoDAO)
         mainViewModel= ViewModelProvider(this,MainViewModelFactory(toDoRepository)).get(MainViewModel::class.java)
 
+
+
+        receiver = NetworkChangeReceiver()
+        val intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(receiver, intentFilter)
 
 
         //display username and password from the login activity
@@ -62,6 +70,10 @@ class MainActivity : AppCompatActivity(),IToDoClick,IToDoDelete {
         UpdateTodolist(username)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(receiver)
+    }
     private fun addTodos(username : String,password:String) {
         binding.add.setOnClickListener {
             val iCreate=Intent(this@MainActivity,CreateUpdateActivity::class.java)
