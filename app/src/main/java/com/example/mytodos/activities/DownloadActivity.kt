@@ -1,26 +1,21 @@
-package com.example.mytodos
+package com.example.mytodos.activities
 
 import android.Manifest
-import android.animation.ObjectAnimator
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.Service
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.media.MediaPlayer
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.provider.Settings
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.example.mytodos.R
 import com.example.mytodos.databinding.ActivityDownloadBinding
-import com.example.mytodos.databinding.ActivityMainBinding
 
 class DownloadActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDownloadBinding

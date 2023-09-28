@@ -1,4 +1,4 @@
-package com.example.mytodos
+package com.example.mytodos.activities
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -10,9 +10,20 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.mytodos.adapter.IToDoClick
+import com.example.mytodos.adapter.IToDoDelete
+import com.example.mytodos.adapter.TodoAdapter
+import com.example.mytodos.broadcastreceiver.AirplaneModeChangeReceiver
 import com.example.mytodos.databinding.ActivityMainBinding
+import com.example.mytodos.db.TodoDAO
+import com.example.mytodos.db.TodoDatabase
+import com.example.mytodos.entity.Entity
+import com.example.mytodos.fragment.ConfirmationDialogFragment
+import com.example.mytodos.repository.ToDoRepository
+import com.example.mytodos.viewmodel.MainViewModel
+import com.example.mytodos.viewmodel.MainViewModelFactory
 
-class MainActivity : AppCompatActivity(),IToDoClick,IToDoDelete {
+class MainActivity : AppCompatActivity(), IToDoClick, IToDoDelete {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mainViewModel: MainViewModel
     private lateinit var todoAdapter: TodoAdapter
@@ -27,11 +38,11 @@ class MainActivity : AppCompatActivity(),IToDoClick,IToDoDelete {
         binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        todoAdapter=TodoAdapter(this,this)
-        database=TodoDatabase.getDatabase(this)
+        todoAdapter= TodoAdapter(this,this)
+        database= TodoDatabase.getDatabase(this)
         todoDAO = TodoDatabase.getDatabase(this).todoDAO()
         toDoRepository = ToDoRepository(todoDAO)
-        mainViewModel= ViewModelProvider(this,MainViewModelFactory(toDoRepository))[MainViewModel::class.java]
+        mainViewModel= ViewModelProvider(this, MainViewModelFactory(toDoRepository))[MainViewModel::class.java]
 
 
 
@@ -87,7 +98,7 @@ class MainActivity : AppCompatActivity(),IToDoClick,IToDoDelete {
     }
     private fun addTodos(username : String,password:String) {
         binding.add.setOnClickListener {
-            val iCreate=Intent(this@MainActivity,CreateUpdateActivity::class.java)
+            val iCreate=Intent(this@MainActivity, CreateUpdateActivity::class.java)
             iCreate.putExtra("USERNAME",username)
             iCreate.putExtra("PASSWORD",password)
             iCreate.putExtra("ID",0)
@@ -117,7 +128,7 @@ class MainActivity : AppCompatActivity(),IToDoClick,IToDoDelete {
     }
 
     override fun onItemClick(entity: Entity) {
-        val iUpdate=Intent(this@MainActivity,UpdateSendAcitivity::class.java)
+        val iUpdate=Intent(this@MainActivity, UpdateSendAcitivity::class.java)
         iUpdate.putExtra("USERNAME",entity.username)
         iUpdate.putExtra("PASSWORD",entity.password)
         iUpdate.putExtra("ID",entity.id)

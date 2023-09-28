@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#FAD3D3"
     android:padding="16dp"
-    tools:context=".DownloadActivity">
+    tools:context=".activities.DownloadActivity">
 
 
 

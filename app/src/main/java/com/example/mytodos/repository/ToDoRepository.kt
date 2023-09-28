@@ -1,4 +1,7 @@
-package com.example.mytodos
+package com.example.mytodos.repository
+
+import com.example.mytodos.db.TodoDAO
+import com.example.mytodos.entity.Entity
 
 class ToDoRepository(val gettodoDAO : TodoDAO) {
 

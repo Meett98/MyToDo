@@ -1,7 +1,6 @@
-package com.example.mytodos
+package com.example.mytodos.activities
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -20,7 +19,7 @@ class LoginActivity : AppCompatActivity() {
         val getpassword = sharedPreference.getString("PASSWORD","")
         if(getusername != "" && getpassword != "")
         {
-            val intent = Intent(this,MainActivity::class.java)
+            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
 

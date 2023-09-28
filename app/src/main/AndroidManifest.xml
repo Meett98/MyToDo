@@ -25,14 +25,14 @@
         android:theme="@style/Theme.MyTodos"
         tools:targetApi="31">
         <activity
-            android:name=".DownloadActivity"
+            android:name=".activities.DownloadActivity"
             android:exported="false" />
         <activity
-            android:name=".UpdateSendAcitivity"
+            android:name=".activities.UpdateSendAcitivity"
             android:exported="false" />
 
         <receiver
-            android:name=".AirplaneModeChangeReceiver"
+            android:name=".broadcastreceiver.AirplaneModeChangeReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
@@ -40,7 +40,7 @@
         </receiver>
 
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -49,10 +49,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CreateUpdateActivity"
+            android:name=".activities.CreateUpdateActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:exported="true" />
 
         <meta-data

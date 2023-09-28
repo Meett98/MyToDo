@@ -1,19 +1,11 @@
-package com.example.mytodos
+package com.example.mytodos.fragment
 
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+import com.example.mytodos.activities.DownloadActivity
 
 /**
  * A simple [Fragment] subclass.
@@ -26,7 +18,7 @@ class ConfirmationDialogFragment : DialogFragment() {
             .setMessage("Are you sure you want to download?")
             .setPositiveButton("Yes") { _, _ ->
                 // Start the download process here
-                val idownload = Intent(requireActivity(),DownloadActivity::class.java)
+                val idownload = Intent(requireActivity(), DownloadActivity::class.java)
                 startActivity(idownload)
             }
             .setNegativeButton("No", null)

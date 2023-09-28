@@ -1,4 +1,4 @@
-package com.example.mytodos
+package com.example.mytodos.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

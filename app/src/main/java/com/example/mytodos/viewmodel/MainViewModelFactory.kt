@@ -1,8 +1,8 @@
-package com.example.mytodos
+package com.example.mytodos.viewmodel
 
-import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.mytodos.repository.ToDoRepository
 
 class MainViewModelFactory (private val toDoRepository: ToDoRepository): ViewModelProvider.Factory {
 

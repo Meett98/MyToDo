@@ -1,12 +1,17 @@
-package com.example.mytodos
+package com.example.mytodos.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.example.mytodos.databinding.ActivityCreateUpdateBinding
+import com.example.mytodos.db.TodoDAO
+import com.example.mytodos.db.TodoDatabase
+import com.example.mytodos.entity.Entity
+import com.example.mytodos.repository.ToDoRepository
+import com.example.mytodos.viewmodel.MainViewModel
+import com.example.mytodos.viewmodel.MainViewModelFactory
 
 class CreateUpdateActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreateUpdateBinding
@@ -28,10 +33,11 @@ class CreateUpdateActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
-        database=TodoDatabase.getDatabase(this)
+        database= TodoDatabase.getDatabase(this)
         todoDAO = TodoDatabase.getDatabase(this).todoDAO()
         toDoRepository = ToDoRepository(todoDAO)
-        mainViewModel= ViewModelProvider(this,MainViewModelFactory(toDoRepository)).get(MainViewModel::class.java)
+        mainViewModel= ViewModelProvider(this, MainViewModelFactory(toDoRepository)).get(
+            MainViewModel::class.java)
 
 
 
@@ -51,7 +57,7 @@ class CreateUpdateActivity : AppCompatActivity() {
             binding.saveButton.text="SAVE TODO"
             binding.saveButton.setOnClickListener {
                 todoTitle=binding.task.text.toString()
-                val entity:Entity= Entity(0,todoTitle,username,password)
+                val entity: Entity = Entity(0,todoTitle,username,password)
                 mainViewModel.insertTodo(entity)
                 Toast.makeText(this, "${entity.title} Added", Toast.LENGTH_LONG).show()
                 val iNext= Intent(this, MainActivity::class.java)
@@ -65,7 +71,7 @@ class CreateUpdateActivity : AppCompatActivity() {
 
             binding.saveButton.setOnClickListener {
                 todoTitle=binding.task.text.toString()
-                val entity:Entity=Entity(id,todoTitle,username,password)
+                val entity: Entity = Entity(id,todoTitle,username,password)
                 mainViewModel.updateTodo(entity)
                 Toast.makeText(this, "Todo Updated", Toast.LENGTH_LONG).show()
                 val iNext= Intent(this, MainActivity::class.java)

@@ -1,4 +1,4 @@
-package com.example.mytodos
+package com.example.mytodos.broadcastreceiver
 
 import android.content.BroadcastReceiver
 import android.content.Context
