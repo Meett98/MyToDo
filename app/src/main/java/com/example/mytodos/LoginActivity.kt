@@ -29,14 +29,21 @@ class LoginActivity : AppCompatActivity() {
             val username = binding.usernameLg.text.toString()
             val password = binding.passwordLg.text.toString()
 
+            if(username == "" || password == "")
+            {
+                Toast.makeText(this,"Please enter all the details",Toast.LENGTH_SHORT).show()
+            }
+            else {
 
-            val editor = sharedPreference.edit()
-            editor.putString("USERNAME",username)
-            editor.putString("PASSWORD",password)
-            editor.apply()
 
-            val intent = Intent(this,MainActivity::class.java)
-            startActivity(intent)
+                val editor = sharedPreference.edit()
+                editor.putString("USERNAME", username)
+                editor.putString("PASSWORD", password)
+                editor.apply()
+
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+            }
         }
     }
 }

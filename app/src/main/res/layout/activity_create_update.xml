@@ -23,6 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter Task"
+        android:textColor="@color/white"
         android:textColorHint="#A19A9A"
         android:padding="15dp"
         android:layout_marginTop="25dp"/>

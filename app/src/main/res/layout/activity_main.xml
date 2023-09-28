@@ -8,8 +8,8 @@
     android:orientation="vertical"
     android:background="#000">
 
+
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -19,12 +19,12 @@
             android:id="@+id/tv_display"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Welcome!"
-            android:textSize="20sp"
-            android:textColor="#fff"
             android:layout_gravity="start|top"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp"
+            android:text="Welcome!"
+            android:textColor="#fff"
+            android:textSize="20sp" />
 
         <!-- Spacer to push the button to the right -->
         <Space
@@ -33,18 +33,25 @@
             android:layout_weight="1" />
 
         <!-- Button at the top-right corner -->
-        <Button
-            android:id="@+id/btn_logout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="LogOut"
-            android:textSize="15dp"
-            android:layout_gravity="end|top"
+        <ImageView
+            android:id="@+id/btn_download"
+            android:layout_width="40dp"
+            android:layout_height="30dp"
+            android:layout_gravity="bottom"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp" />
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/twotone_download_24" />
+
+        <ImageView
+            android:id="@+id/btn_logout"
+            android:layout_width="40dp"
+            android:layout_height="30dp"
+            android:layout_gravity="bottom"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/twotone_logout_24" />
 
     </LinearLayout>
-
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -54,6 +61,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
             tools:listitem="@layout/todo_item_view"
+            android:layout_marginTop="15dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
