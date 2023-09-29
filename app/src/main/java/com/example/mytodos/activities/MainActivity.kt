@@ -6,31 +6,31 @@ import android.content.IntentFilter
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.mytodos.adapter.IToDoClick
-import com.example.mytodos.adapter.IToDoDelete
-import com.example.mytodos.adapter.TodoAdapter
+import com.example.mytodos.adapter.ITravelPostClick
+import com.example.mytodos.adapter.TravelPostAdapter
 import com.example.mytodos.broadcastreceiver.AirplaneModeChangeReceiver
 import com.example.mytodos.databinding.ActivityMainBinding
-import com.example.mytodos.db.TodoDAO
-import com.example.mytodos.db.TodoDatabase
-import com.example.mytodos.entity.Entity
+import com.example.mytodos.db.TravelPostDao
+import com.example.mytodos.db.TravelPostDatabase
+import com.example.mytodos.entity.EntityPost
 import com.example.mytodos.fragment.ConfirmationDialogFragment
-import com.example.mytodos.repository.ToDoRepository
-import com.example.mytodos.viewmodel.MainViewModel
-import com.example.mytodos.viewmodel.MainViewModelFactory
+import com.example.mytodos.repository.TravelPostRepository
+import com.example.mytodos.viewmodel.TravelPostViewModel
+import com.example.mytodos.viewmodel.TravelPostViewModelFactory
 
-class MainActivity : AppCompatActivity(), IToDoClick, IToDoDelete {
+class MainActivity : AppCompatActivity(),ITravelPostClick {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var mainViewModel: MainViewModel
-    private lateinit var todoAdapter: TodoAdapter
-    private lateinit var toDoRepository: ToDoRepository
-    private lateinit var todoDAO: TodoDAO
-    private lateinit var database: TodoDatabase
     private var receiver = AirplaneModeChangeReceiver()
+
+    private lateinit var travelPostAdapter: TravelPostAdapter
+    private lateinit var travelPostViewModel: TravelPostViewModel
+    private lateinit var travelPostRepository: TravelPostRepository
+    private lateinit var travelPostDao: TravelPostDao
+    private lateinit var travelPostDatabase: TravelPostDatabase
+
+
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,13 +38,20 @@ class MainActivity : AppCompatActivity(), IToDoClick, IToDoDelete {
         binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        todoAdapter= TodoAdapter(this,this)
-        database= TodoDatabase.getDatabase(this)
-        todoDAO = TodoDatabase.getDatabase(this).todoDAO()
-        toDoRepository = ToDoRepository(todoDAO)
-        mainViewModel= ViewModelProvider(this, MainViewModelFactory(toDoRepository))[MainViewModel::class.java]
+
+        //for to-do list
+//        todoAdapter= TodoAdapter(this,this)
+//        database= TodoDatabase.getDatabase(this)
+//        todoDAO = TodoDatabase.getDatabase(this).todoDAO()
+//        toDoRepository = ToDoRepository(todoDAO)
+//        mainViewModel= ViewModelProvider(this, MainViewModelFactory(toDoRepository))[MainViewModel::class.java]
 
 
+        travelPostAdapter = TravelPostAdapter(this)
+        travelPostDatabase = TravelPostDatabase.getDatabase(this)
+        travelPostDao = TravelPostDatabase.getDatabase(this).travelpostDAO()
+        travelPostRepository = TravelPostRepository(travelPostDao)
+        travelPostViewModel = ViewModelProvider(this,TravelPostViewModelFactory(travelPostRepository))[TravelPostViewModel::class.java]
 
 
         val intentFilter = IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED)
@@ -78,16 +85,26 @@ class MainActivity : AppCompatActivity(), IToDoClick, IToDoDelete {
             dialogFragment.show(supportFragmentManager, "ConfirmationDialog")
         }
 
+        addPost(username,password)
+        setLayoutManagerAndAdapterForTravelPost()
+        updateTravelPost(username)
 
 
-        //Add Button OnclickListener
-        addTodos(username,password)
+    }
 
-        //Recyclerview and adapter
-        setLayoutManagerAndAdapter()
 
-        //Update the list
-        updateTodolist(username)
+
+    private fun addPost(username: String, password: String) {
+        binding.add.setOnClickListener {
+            val iCreate=Intent(this@MainActivity, CreatePostActivity::class.java)
+            iCreate.putExtra("USERNAME",username)
+            iCreate.putExtra("PASSWORD",password)
+            iCreate.putExtra("ID",0)
+            iCreate.putExtra("TITLE","")
+            iCreate.putExtra("LOCATION","")
+            iCreate.putExtra("BUTTON_TEXT","SAVE")
+            startActivity(iCreate)
+        }
     }
 
 
@@ -96,55 +113,42 @@ class MainActivity : AppCompatActivity(), IToDoClick, IToDoDelete {
             unregisterReceiver(receiver)
 
     }
-    private fun addTodos(username : String,password:String) {
-        binding.add.setOnClickListener {
-            val iCreate=Intent(this@MainActivity, CreateUpdateActivity::class.java)
-            iCreate.putExtra("USERNAME",username)
-            iCreate.putExtra("PASSWORD",password)
-            iCreate.putExtra("ID",0)
-            iCreate.putExtra("TITLE","")
-            iCreate.putExtra("BUTTON_TEXT","SAVE")
-            Log.i("UUU",username)
-            startActivity(iCreate)
-        }
-    }
 
 
-    private fun setLayoutManagerAndAdapter() {
+
+    private fun setLayoutManagerAndAdapterForTravelPost() {
         binding.recyclerView.apply {
             layoutManager= LinearLayoutManager(this@MainActivity)
-            adapter=todoAdapter
+            adapter=travelPostAdapter
         }
     }
 
 
-    private fun updateTodolist(username: String) {
-        mainViewModel.getAllTodos(username)
-        mainViewModel.alltodos.observe(this) { todolist ->
-            todolist?.let {
-                todoAdapter.updateTodoList(it)
+
+    private fun updateTravelPost(username: String) {
+        travelPostViewModel.getAllTravelPost(username)
+        travelPostViewModel.allTravelPost.observe(this){travelPostlist ->
+            travelPostlist?.let{
+                travelPostAdapter.updateTravelPostList(it)
+
             }
         }
     }
 
-    override fun onItemClick(entity: Entity) {
-        val iUpdate=Intent(this@MainActivity, UpdateSendAcitivity::class.java)
-        iUpdate.putExtra("USERNAME",entity.username)
-        iUpdate.putExtra("PASSWORD",entity.password)
-        iUpdate.putExtra("ID",entity.id)
-        iUpdate.putExtra("TITLE",entity.title)
+    override fun onPostItemClick(entityPost: EntityPost) {
+        val iUpdate=Intent(this@MainActivity, UpdatePostActivity::class.java)
+        iUpdate.putExtra("USERNAME",entityPost.username)
+        iUpdate.putExtra("PASSWORD",entityPost.password)
+        iUpdate.putExtra("ID",entityPost.id)
+        iUpdate.putExtra("POSTTITLE",entityPost.posttitle)
+        iUpdate.putExtra("LOCATION",entityPost.location)
         iUpdate.putExtra("BUTTON_TEXT","Update")
         startActivity(iUpdate)
-        setLayoutManagerAndAdapter()
-        updateTodolist(entity.username)
+
+        setLayoutManagerAndAdapterForTravelPost()
+        updateTravelPost(entityPost.username)
     }
 
-    override fun onDeleteClick(entity: Entity) {
-        mainViewModel.deleteTodo(entity)
-        setLayoutManagerAndAdapter()
-        updateTodolist(entity.username)
-        Toast.makeText(this, "${entity.title} Deleted", Toast.LENGTH_SHORT).show()
-    }
 
 
 
@@ -154,6 +158,8 @@ class MainActivity : AppCompatActivity(), IToDoClick, IToDoDelete {
         editor.clear()
         editor.apply()
     }
+
+
 
 
 }

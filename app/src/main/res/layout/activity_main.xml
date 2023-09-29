@@ -60,7 +60,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
-            tools:listitem="@layout/todo_item_view"
+            tools:listitem="@layout/item_post"
             android:layout_marginTop="15dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
