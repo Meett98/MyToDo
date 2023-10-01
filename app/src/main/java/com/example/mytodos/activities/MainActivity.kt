@@ -6,6 +6,7 @@ import android.content.IntentFilter
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mytodos.adapter.ITravelPostClick
@@ -15,10 +16,16 @@ import com.example.mytodos.databinding.ActivityMainBinding
 import com.example.mytodos.db.TravelPostDao
 import com.example.mytodos.db.TravelPostDatabase
 import com.example.mytodos.entity.EntityPost
+import com.example.mytodos.firebase.FirebaseMsgService
 import com.example.mytodos.fragment.ConfirmationDialogFragment
 import com.example.mytodos.repository.TravelPostRepository
 import com.example.mytodos.viewmodel.TravelPostViewModel
 import com.example.mytodos.viewmodel.TravelPostViewModelFactory
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.FirebaseMessagingService
+
 
 class MainActivity : AppCompatActivity(),ITravelPostClick {
     private lateinit var binding: ActivityMainBinding
@@ -89,6 +96,26 @@ class MainActivity : AppCompatActivity(),ITravelPostClick {
         setLayoutManagerAndAdapterForTravelPost()
         updateTravelPost(username)
 
+
+
+
+
+
+
+
+
+
+
+        FirebaseMessaging.getInstance().token
+            .addOnCompleteListener {
+
+                if(!it.isSuccessful)
+                {
+                    Log.e("TokenDetails","Token Failed To Receive")
+                }
+                val token = it.result
+                Log.d("TOKEN",token)
+            }
 
     }
 
