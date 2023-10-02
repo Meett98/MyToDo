@@ -98,13 +98,7 @@ class MainActivity : AppCompatActivity(),ITravelPostClick {
 
 
 
-
-
-
-
-
-
-
+        //val c = travelPostViewModel.getPostCount()
 
         FirebaseMessaging.getInstance().token
             .addOnCompleteListener {

@@ -9,12 +9,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.mytodos.R
-import com.example.mytodos.activities.DownloadActivity
 import com.example.mytodos.activities.MainActivity
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -38,9 +36,9 @@ class FirebaseMsgService : FirebaseMessagingService() {
         val intent = Intent(this,MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
-        val pi = PendingIntent.getActivity(this,100,intent,PendingIntent.FLAG_UPDATE_CURRENT)
+        val pi = PendingIntent.getActivity(this,100,intent,PendingIntent.FLAG_IMMUTABLE)
 
-        val notification = NotificationCompat.Builder(this,FirebaseMsgService.CHANNEL_ID )
+        val notification = NotificationCompat.Builder(this,CHANNEL_ID )
             .setContentTitle(title)
             .setContentText(msg)
             .setSmallIcon(R.drawable.twotone_notifications_active_24)
@@ -57,7 +55,7 @@ class FirebaseMsgService : FirebaseMessagingService() {
             ) {
                 return
             }
-            notify(FirebaseMsgService.NOTIFICATION_ID, notification.build())
+            notify(NOTIFICATION_ID, notification.build())
         }
     }
     private fun createNotificationChannel() {
@@ -67,7 +65,7 @@ class FirebaseMsgService : FirebaseMessagingService() {
             val name = "Download Channel"
             val descriptionText = "Channel for download notifications"
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(FirebaseMsgService.CHANNEL_ID, name, importance).apply {
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
                 description = descriptionText
             }
 

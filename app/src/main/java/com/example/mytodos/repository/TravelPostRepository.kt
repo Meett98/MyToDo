@@ -1,5 +1,6 @@
 package com.example.mytodos.repository
 
+import androidx.lifecycle.LiveData
 import com.example.mytodos.db.TodoDAO
 import com.example.mytodos.db.TravelPostDao
 import com.example.mytodos.entity.Entity
@@ -20,9 +21,14 @@ class TravelPostRepository(val travelpostDAO : TravelPostDao) {
     {
         travelpostDAO.deleteTravelPost(entityPost)
     }
-    fun getallTravelPost(username:String) : List<EntityPost>
+    suspend fun getallTravelPost(username:String) : List<EntityPost>
     {
         return travelpostDAO.getAllTravelPost(username)
     }
+
+    fun getUserPostCountLiveData(userId: String): LiveData<Int> {
+        return travelpostDAO.getPostCount(userId)
+    }
+
 
 }

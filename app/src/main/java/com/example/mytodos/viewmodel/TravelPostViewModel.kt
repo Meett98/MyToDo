@@ -15,6 +15,20 @@ class TravelPostViewModel(private val travelPostRepository: TravelPostRepository
     val allTravelPost: LiveData<List<EntityPost>>
         get() = travelpostsmutable
 
+
+
+
+    private var userPostCountLiveData: LiveData<Int>? = null
+
+    // Function to get the user's post count
+    fun getUserPostCount(userId: String): LiveData<Int> {
+        if (userPostCountLiveData == null) {
+            userPostCountLiveData = travelPostRepository.getUserPostCountLiveData(userId)
+        }
+        return userPostCountLiveData!!
+    }
+
+
     fun insertTravelPost(entityPost: EntityPost) = viewModelScope.launch(Dispatchers.IO){
         travelPostRepository.insertTravelPost(entityPost)
     }
@@ -33,6 +47,8 @@ class TravelPostViewModel(private val travelPostRepository: TravelPostRepository
         var result:List<EntityPost> = travelPostRepository.getallTravelPost(username)
         travelpostsmutable.postValue(result)
     }
+
+
 
 
 }

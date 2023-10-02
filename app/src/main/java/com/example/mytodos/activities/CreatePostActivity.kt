@@ -1,10 +1,19 @@
 package com.example.mytodos.activities
 
+import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.ViewModelProvider
 import com.example.mytodos.R
 import com.example.mytodos.databinding.ActivityCreatePostBinding
@@ -68,7 +77,16 @@ class CreatePostActivity : AppCompatActivity() {
             val entityPost = EntityPost(0,postTitle,postLocation,username,password)
 
             travelPostViewModel.insertTravelPost(entityPost)
+            val count = travelPostViewModel.getUserPostCount(username)
+            travelPostViewModel.getUserPostCount(username).observe(this){
+                if(it == 2)
+                {
+                    createNotification()
+                }
+
+            }
             Toast.makeText(this, "Post Added", Toast.LENGTH_LONG).show()
+
             val iNext= Intent(this, MainActivity::class.java)
             startActivity(iNext)
 
@@ -103,4 +121,60 @@ class CreatePostActivity : AppCompatActivity() {
         }
     }
 
+
+
+
+    private fun createNotification() {
+        // Create a notification channel (for Android 8.0 and higher)
+        createNotificationChannel()
+
+
+
+
+        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setContentTitle("Congretulations!!")
+            .setContentText("You've reached 10 posts in your travel diary.")
+            .setSmallIcon(R.drawable.twotone_celebration_24)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+
+
+        with(NotificationManagerCompat.from(this)) {
+            if (ActivityCompat.checkSelfPermission(
+                    this@CreatePostActivity,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return
+            }
+            notify(NOTIFICATION_ID, notification.build())
+        }
+
+
+
+
+
+    }
+
+    private fun createNotificationChannel() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+
+            val name = "Download Channel"
+            val descriptionText = "Channel for download notifications"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+
+            val notificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+
+    }
+
+    companion object {
+        private const val CHANNEL_ID = "download_channel"
+        private const val NOTIFICATION_ID = 1
+    }
 }
