@@ -8,7 +8,7 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.mytodos.entity.EntityPost
 
-@Database(entities = [EntityPost::class], version = 4)
+@Database(entities = [EntityPost::class], version = 6)
 abstract class TravelPostDatabase : RoomDatabase() {
 
     abstract fun travelpostDAO() : TravelPostDao
@@ -22,30 +22,57 @@ abstract class TravelPostDatabase : RoomDatabase() {
 
 
 
-        val MIGRATION_3_4 = object : Migration(3, 4) {
+        val MIGRATION_5_6 = object : Migration(5, 6) {
+
+//            override fun migrate(database: SupportSQLiteDatabase) {
+//                // Create a new table with the added columns
+//                database.execSQL("CREATE TABLE IF NOT EXISTS Travel_Diary_New (" +
+//                        "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+//                        "postTitle TEXT NOT NULL, " +
+//                        "postLocation TEXT NOT NULL, " +
+//                        "username TEXT NOT NULL, " +
+//                        "password TEXT NOT NULL, " +
+//                        "imageResourceId INTEGER, " + // New column for drawable resource ID
+//                        "imageUri TEXT)"               // New column for image URI
+//                )
+//
+//                // Copy data from the old table to the new table
+//                database.execSQL("INSERT INTO Travel_Diary_New (id, postTitle, postLocation, username, password, " +
+//                        "imageResourceId, imageUri) " +
+//                        "SELECT id, postTitle, postLocation, username, password, " +
+//                        "imageResourceId, imageUri FROM Travel_Diary")
+//
+//                // Drop the old table
+//                database.execSQL("DROP TABLE Travel_Diary")
+//
+//                // Rename the new table to the original table name
+//                database.execSQL("ALTER TABLE Travel_Diary_New RENAME TO Travel_Diary")
+//            }
             override fun migrate(database: SupportSQLiteDatabase) {
-
-
+                // Create a new table with the added columns
                 database.execSQL("CREATE TABLE IF NOT EXISTS Travel_Diary_New (" +
                         "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
                         "posttitle TEXT NOT NULL, " +
                         "location TEXT NOT NULL, " +
                         "username TEXT NOT NULL, " +
                         "password TEXT NOT NULL, " +
-                        "image INTEGER NOT NULL DEFAULT 0)")
+                        "imageUri TEXT)"               // New column for image URI
+                )
 
                 // Copy data from the old table to the new table
-                database.execSQL("INSERT INTO Travel_Diary_New (id, posttitle, location, username, password) " +
-                        "SELECT id, posttitle, location, username, password FROM Travel_Diary")
+                database.execSQL("INSERT INTO Travel_Diary_New (id, posttitle, location, username, password, " +
+                        "imageUri) " +
+                        "SELECT id, posttitle, location, username, password, " +
+                        "imageUri FROM Travel_Diary")
 
                 // Drop the old table
                 database.execSQL("DROP TABLE Travel_Diary")
 
                 // Rename the new table to the original table name
                 database.execSQL("ALTER TABLE Travel_Diary_New RENAME TO Travel_Diary")
-
             }
         }
+
 
         fun getDatabase(context: Context): TravelPostDatabase {
             if (INSTANCE == null) {
@@ -54,7 +81,7 @@ abstract class TravelPostDatabase : RoomDatabase() {
                         context,
                         TravelPostDatabase::class.java,
                         "travelpost_database"
-                    ).addMigrations(MIGRATION_3_4)
+                    ) .fallbackToDestructiveMigration() //.addMigrations(MIGRATION_5_6)
                         .build()
                 }
             }

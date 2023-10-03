@@ -168,7 +168,7 @@ class MainActivity : AppCompatActivity(),ITravelPostClick {
         iUpdate.putExtra("ID",entityPost.id)
         iUpdate.putExtra("POSTTITLE",entityPost.posttitle)
         iUpdate.putExtra("LOCATION",entityPost.location)
-        iUpdate.putExtra("IMAGE",entityPost.image)
+        iUpdate.putExtra("IMAGEUri",entityPost.imageUri)
         iUpdate.putExtra("BUTTON_TEXT","Update")
         startActivity(iUpdate)
 

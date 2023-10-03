@@ -13,5 +13,8 @@ data class EntityPost(
     var location:String,
     var username : String,
     var password: String,
-    var image:Int
+//    val imageResourceId: Int?, // Nullable Int for drawable resource ID
+//    val imageUri: String? // Nullable String for image URI
+    val imageUri:String?
+
 )

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -57,12 +58,18 @@ class UpdatePostActivity : AppCompatActivity() {
         postTitle = intent.getStringExtra("POSTTITLE").toString()
         postLocation = intent.getStringExtra("LOCATION").toString()
         btn = intent.getStringExtra("BUTTON_TEXT").toString()
-        val image = intent.getIntExtra("IMAGE",0)
+        val imageUri = intent.getStringExtra("IMAGEUri")
 
 
         binding.postTitle.setText(postTitle)
         binding.postLocation.setText(postLocation)
-        binding.imagePost.setImageResource(image)
+
+        if(imageUri!=null)
+        {
+            val image = Uri.parse(imageUri)
+
+            binding.imagePost.setImageURI(image)
+        }
 
         binding.updateButton.setOnClickListener {
             postTitle = binding.postTitle.text.toString()
@@ -70,7 +77,7 @@ class UpdatePostActivity : AppCompatActivity() {
 
 
 //            val entityPost = EntityPost(id,postTitle,postLocation,imageUri.toString(),username,password)
-            val entityPost = EntityPost(id,postTitle,postLocation,username,password,image)
+            val entityPost = EntityPost(id,postTitle,postLocation,username,password,imageUri)
 
             travelPostViewModel.updateTravelPost(entityPost)
             Toast.makeText(this, "Updated the Post", Toast.LENGTH_LONG).show()
@@ -83,7 +90,7 @@ class UpdatePostActivity : AppCompatActivity() {
             postLocation = binding.postLocation.text.toString()
 
 //            val entityPost = EntityPost(id,postTitle,postLocation,imageUri.toString(),username,password)
-            val entityPost = EntityPost(id,postTitle,postLocation,username,password,image)
+            val entityPost = EntityPost(id,postTitle,postLocation,username,password,imageUri)
 
             travelPostViewModel.deleteTravelPost(entityPost)
             Toast.makeText(this, "Post Deleted", Toast.LENGTH_LONG).show()

@@ -40,6 +40,8 @@ class CreatePostActivity : AppCompatActivity() {
     private val PICK_IMAGE_REQUEST = 2
     private var selectedImageUri: Uri? = null
     private var count:Int = 0
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCreatePostBinding.inflate(layoutInflater)
@@ -67,25 +69,33 @@ class CreatePostActivity : AppCompatActivity() {
         binding.postButton.setOnClickListener{
             postTitle = binding.postTitle.text.toString()
             postLocation = binding.postLocation.text.toString()
+            var imageResourceId = R.drawable.travelimg3
+            var imageUri: String? = null
 
 
-            var image = R.drawable.travelimg3
             if(count.equals(3))
             {
                 createNotification()
             }
 
 
-            if((count%2).equals(1) )
-            {
-                image = R.drawable.travelimg1
-            }
-            else if((count%2).equals(0))
-            {
-                image = R.drawable.travelimg2
-            }
 
-            val entityPost = EntityPost(0,postTitle,postLocation,username,password,image)
+            if (selectedImageUri != null) {
+                // User selected an image from the gallery
+                imageUri = selectedImageUri.toString()
+            }
+            else {
+                if ((count % 2).equals(1)) {
+                    imageResourceId = R.drawable.travelimg1
+                    val uri = Uri.parse("android.resource://com.example.mytodos/$imageResourceId")
+                    imageUri = uri.toString()
+                } else if ((count % 2).equals(0)) {
+                    imageResourceId = R.drawable.travelimg2
+                    val uri = Uri.parse("android.resource://com.example.mytodos/$imageResourceId")
+                    imageUri = uri.toString()
+                }
+            }
+            val entityPost = EntityPost(0,postTitle,postLocation,username,password,imageUri)
 
             travelPostViewModel.insertTravelPost(entityPost)
 
@@ -113,15 +123,10 @@ class CreatePostActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK) {
-            if (data != null && data.data != null) {
-                // User has selected an image
-                selectedImageUri = data.data!!
-
-                // Now you can use this selectedImageUri to display the image in your UI
-                // For example, you can load it into an ImageView
-                binding.imagePost.setImageURI(selectedImageUri)
-            }
+        if (data != null && data.data != null) {
+            // User has selected an image from the gallery
+            selectedImageUri = data.data!!
+            binding.imagePost.setImageURI(selectedImageUri)
         }
     }
 

@@ -30,8 +30,12 @@ class TravelPostAdapter(private val itravelpostclick : ITravelPostClick) : Recyc
         val currTodo = travelPosts[position]
         holder.binding.postTitle.text=currTodo.posttitle
         holder.binding.postLocation.text = "Location : " + currTodo.location
-        holder.binding.imagePost.setImageResource(currTodo.image)
+        if(currTodo.imageUri != null)
+        {
+            val imageUri = Uri.parse(currTodo.imageUri)
 
+            holder.binding.imagePost.setImageURI(imageUri)
+        }
         holder.itemView.setOnClickListener {
             itravelpostclick.onPostItemClick(travelPosts[position])
         }
