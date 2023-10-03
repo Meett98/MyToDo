@@ -32,6 +32,7 @@ class UpdatePostActivity : AppCompatActivity() {
     private lateinit var travelPostDao: TravelPostDao
     private lateinit var postTitle:String
     private lateinit var postLocation:String
+
 //    private  var imageUri : Uri? = null
     private lateinit var btn:String
     private var id:Int=0
@@ -56,18 +57,20 @@ class UpdatePostActivity : AppCompatActivity() {
         postTitle = intent.getStringExtra("POSTTITLE").toString()
         postLocation = intent.getStringExtra("LOCATION").toString()
         btn = intent.getStringExtra("BUTTON_TEXT").toString()
+        val image = intent.getIntExtra("IMAGE",0)
 
 
         binding.postTitle.setText(postTitle)
         binding.postLocation.setText(postLocation)
-
+        binding.imagePost.setImageResource(image)
 
         binding.updateButton.setOnClickListener {
             postTitle = binding.postTitle.text.toString()
             postLocation = binding.postLocation.text.toString()
 
+
 //            val entityPost = EntityPost(id,postTitle,postLocation,imageUri.toString(),username,password)
-            val entityPost = EntityPost(id,postTitle,postLocation,username,password)
+            val entityPost = EntityPost(id,postTitle,postLocation,username,password,image)
 
             travelPostViewModel.updateTravelPost(entityPost)
             Toast.makeText(this, "Updated the Post", Toast.LENGTH_LONG).show()
@@ -80,7 +83,7 @@ class UpdatePostActivity : AppCompatActivity() {
             postLocation = binding.postLocation.text.toString()
 
 //            val entityPost = EntityPost(id,postTitle,postLocation,imageUri.toString(),username,password)
-            val entityPost = EntityPost(id,postTitle,postLocation,username,password)
+            val entityPost = EntityPost(id,postTitle,postLocation,username,password,image)
 
             travelPostViewModel.deleteTravelPost(entityPost)
             Toast.makeText(this, "Post Deleted", Toast.LENGTH_LONG).show()

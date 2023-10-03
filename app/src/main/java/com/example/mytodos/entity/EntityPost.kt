@@ -1,5 +1,6 @@
 package com.example.mytodos.entity
 
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -11,9 +12,6 @@ data class EntityPost(
     var posttitle:String,
     var location:String,
     var username : String,
-    var password: String
-
-//    var imageUri : String?,
-
-
+    var password: String,
+    var image:Int
 )

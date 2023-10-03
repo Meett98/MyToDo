@@ -116,15 +116,20 @@ class MainActivity : AppCompatActivity(),ITravelPostClick {
 
 
     private fun addPost(username: String, password: String) {
+        var count = -1
         binding.add.setOnClickListener {
-            val iCreate=Intent(this@MainActivity, CreatePostActivity::class.java)
-            iCreate.putExtra("USERNAME",username)
-            iCreate.putExtra("PASSWORD",password)
-            iCreate.putExtra("ID",0)
-            iCreate.putExtra("TITLE","")
-            iCreate.putExtra("LOCATION","")
-            iCreate.putExtra("BUTTON_TEXT","SAVE")
-            startActivity(iCreate)
+            travelPostViewModel.getUserPostCount(username).observe(this) {
+                val iCreate=Intent(this@MainActivity, CreatePostActivity::class.java)
+                iCreate.putExtra("USERNAME",username)
+                iCreate.putExtra("PASSWORD",password)
+                iCreate.putExtra("ID",0)
+                iCreate.putExtra("TITLE","")
+                iCreate.putExtra("LOCATION","")
+                iCreate.putExtra("BUTTON_TEXT","SAVE")
+                iCreate.putExtra("COUNT",it)
+                startActivity(iCreate)
+            }
+
         }
     }
 
@@ -163,6 +168,7 @@ class MainActivity : AppCompatActivity(),ITravelPostClick {
         iUpdate.putExtra("ID",entityPost.id)
         iUpdate.putExtra("POSTTITLE",entityPost.posttitle)
         iUpdate.putExtra("LOCATION",entityPost.location)
+        iUpdate.putExtra("IMAGE",entityPost.image)
         iUpdate.putExtra("BUTTON_TEXT","Update")
         startActivity(iUpdate)
 

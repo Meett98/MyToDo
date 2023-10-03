@@ -17,16 +17,10 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.ViewModelProvider
 import com.example.mytodos.R
 import com.example.mytodos.databinding.ActivityCreatePostBinding
-import com.example.mytodos.databinding.ActivityCreateUpdateBinding
-import com.example.mytodos.db.TodoDAO
-import com.example.mytodos.db.TodoDatabase
 import com.example.mytodos.db.TravelPostDao
 import com.example.mytodos.db.TravelPostDatabase
-import com.example.mytodos.entity.Entity
 import com.example.mytodos.entity.EntityPost
-import com.example.mytodos.repository.ToDoRepository
 import com.example.mytodos.repository.TravelPostRepository
-import com.example.mytodos.viewmodel.MainViewModel
 import com.example.mytodos.viewmodel.TravelPostViewModel
 import com.example.mytodos.viewmodel.TravelPostViewModelFactory
 
@@ -45,6 +39,7 @@ class CreatePostActivity : AppCompatActivity() {
     private var id:Int=0
     private val PICK_IMAGE_REQUEST = 2
     private var selectedImageUri: Uri? = null
+    private var count:Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCreatePostBinding.inflate(layoutInflater)
@@ -63,6 +58,8 @@ class CreatePostActivity : AppCompatActivity() {
         postTitle = intent.getStringExtra("TITLE").toString()
         postLocation = intent.getStringExtra("LOCATION").toString()
         btn = intent.getStringExtra("BUTTON_TEXT").toString()
+        count = intent.getIntExtra("COUNT",0)
+        Toast.makeText(this,"$count",Toast.LENGTH_SHORT).show()
 
 
 
@@ -72,19 +69,26 @@ class CreatePostActivity : AppCompatActivity() {
             postLocation = binding.postLocation.text.toString()
 
 
+            var image = R.drawable.travelimg3
+            if(count.equals(3))
+            {
+                createNotification()
+            }
 
-//            val entityPost = EntityPost(0,postTitle,postLocation,selectedImageUri.toString(),username,password)
-            val entityPost = EntityPost(0,postTitle,postLocation,username,password)
+
+            if((count%2).equals(1) )
+            {
+                image = R.drawable.travelimg1
+            }
+            else if((count%2).equals(0))
+            {
+                image = R.drawable.travelimg2
+            }
+
+            val entityPost = EntityPost(0,postTitle,postLocation,username,password,image)
 
             travelPostViewModel.insertTravelPost(entityPost)
-            val count = travelPostViewModel.getUserPostCount(username)
-            travelPostViewModel.getUserPostCount(username).observe(this){
-                if(it == 2)
-                {
-                    createNotification()
-                }
 
-            }
             Toast.makeText(this, "Post Added", Toast.LENGTH_LONG).show()
 
             val iNext= Intent(this, MainActivity::class.java)
@@ -133,7 +137,7 @@ class CreatePostActivity : AppCompatActivity() {
 
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Congretulations!!")
-            .setContentText("You've reached 10 posts in your travel diary.")
+            .setContentText("You've reached 5 posts in your travel diary.")
             .setSmallIcon(R.drawable.twotone_celebration_24)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
